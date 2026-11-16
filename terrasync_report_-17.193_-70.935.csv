@@ -1,0 +1,74 @@
+﻿section,item,value
+site,name,Valle de Moquegua
+site,latitude,-17.193
+site,longitude,-70.935
+site,climate_source,NASA POWER (MERRA-2 / CERES) - local CSV
+site,flags,pilot
+inputs,priorities,water
+inputs,"water_availability(1=low,3=high)",2
+indicator,aridity_index,0.175
+indicator,mean_annual_precip_mm,198.5387
+indicator,mean_annual_ET0_mm_estimated,1134.345
+indicator,mean_temp_C,7.8847
+indicator,days_Tmin_below_0C,201
+indicator,smap_mean_m3m3,0.0829
+indicator,smap_valid_days,253
+indicator,gwettop_mean,
+indicator,ndvi_mean,0.0895
+indicator,soil_ph_0-5cm,8.2
+indicator,soil_ph_15-30cm,8.1
+indicator,soil_texture,Sandy loam
+indicator,soil_soc_g_kg_0-5cm,12.3
+strategy,Práctica actual (monocultivo / periodos de suelo desnudo) | fit_score,40
+strategy,Práctica actual (monocultivo / periodos de suelo desnudo) | breakdown,priority 40; water 0; aridity 0
+evidence,Práctica actual (monocultivo / periodos de suelo desnudo),"NDVI MODIS (250 m, 16 días): media 0.09, rango 0.06–0.13 (variación 0.07). Un píxel mezcla cultivos, suelo desnudo y desierto, por lo que no muestra qué hacía una parcela concreta en una fecha."
+evidence,Práctica actual (monocultivo / periodos de suelo desnudo),Humedad superficial SMAP (9 km): media 0.083 m³/m³ en 253 recuperaciones válidas; 86% por debajo de 0.10 m³/m³.
+evidence,Práctica actual (monocultivo / periodos de suelo desnudo),"SoilGrids (250 m), 0–5 / 15–30 cm: textura Franco arenoso (arena 53.4%, limo 33.9%, arcilla 12.6%), pH 8.2 / 8.1, carbono orgánico 12.3 / 9.4 g/kg."
+benefit,Práctica actual (monocultivo / periodos de suelo desnudo),"Conocida por el agricultor: no requiere semillas, equipos ni conocimientos nuevos"
+benefit,Práctica actual (monocultivo / periodos de suelo desnudo),Menor costo y mano de obra a corto plazo
+benefit,Práctica actual (monocultivo / periodos de suelo desnudo),Sirve como referencia para juzgar las alternativas
+data_gap,Práctica actual (monocultivo / periodos de suelo desnudo),"Diferencia de resolución: grilla climática ≈ 0.5° × 0.625° (~50 km), SMAP ≈ 9 km, NDVI MODIS ≈ 250 m, SoilGrids ≈ 250 m. Una parcela (a menudo < 5 ha) es mucho menor que un píxel, así que son promedios de área, no mediciones en parcela."
+data_gap,Práctica actual (monocultivo / periodos de suelo desnudo),"La celda climática se caracteriza por una elevación de unos 3851 m (MERRA-2 grid-cell average elevation (0.5 x 0.625 deg), not plot elevation). Si tu parcela está mucho más alta o baja, las temperaturas reales pueden diferir varios °C (≈6.5 °C por km)."
+data_gap,Práctica actual (monocultivo / periodos de suelo desnudo),SMAP devolvió un valor válido en solo 253 de 678 días (≈37%); el resto son vacíos de recuperación.
+data_gap,Práctica actual (monocultivo / periodos de suelo desnudo),Los satélites no indican si un campo concreto estaba desnudo o cultivado en una fecha; pregunta al agricultor por el calendario real.
+risk,Práctica actual (monocultivo / periodos de suelo desnudo),Los periodos de suelo desnudo exponen el suelo superficial a la erosión por viento y riego
+risk,Práctica actual (monocultivo / periodos de suelo desnudo),El monocultivo continuo puede agotar nutrientes y acumular plagas y enfermedades
+risk,Práctica actual (monocultivo / periodos de suelo desnudo),El ingreso y el riesgo climático dependen de un solo cultivo
+strategy,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico | fit_score,35
+strategy,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico | breakdown,priority 40; water 0; aridity -5
+evidence,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,"SoilGrids (250 m), 0–5 / 15–30 cm: textura Franco arenoso (arena 53.4%, limo 33.9%, arcilla 12.6%), pH 8.2 / 8.1, carbono orgánico 12.3 / 9.4 g/kg."
+evidence,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Humedad superficial SMAP (9 km): media 0.083 m³/m³ en 253 recuperaciones válidas; 86% por debajo de 0.10 m³/m³.
+evidence,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,"NDVI MODIS (250 m, 16 días): media 0.09, rango 0.06–0.13 (variación 0.07). Un píxel mezcla cultivos, suelo desnudo y desierto, por lo que no muestra qué hacía una parcela concreta en una fecha."
+benefit,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Las leguminosas pueden aportar nitrógeno fijado biológicamente y reducir el uso de fertilizante
+benefit,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,La cobertura reduce la erosión y la evaporación del suelo desnudo
+benefit,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Las franjas florales pueden albergar insectos benéficos para el control biológico
+benefit,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Los residuos aportan materia orgánica con el tiempo
+data_gap,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,"Diferencia de resolución: grilla climática ≈ 0.5° × 0.625° (~50 km), SMAP ≈ 9 km, NDVI MODIS ≈ 250 m, SoilGrids ≈ 250 m. Una parcela (a menudo < 5 ha) es mucho menor que un píxel, así que son promedios de área, no mediciones en parcela."
+data_gap,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,"La celda climática se caracteriza por una elevación de unos 3851 m (MERRA-2 grid-cell average elevation (0.5 x 0.625 deg), not plot elevation). Si tu parcela está mucho más alta o baja, las temperaturas reales pueden diferir varios °C (≈6.5 °C por km)."
+data_gap,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,SMAP devolvió un valor válido en solo 253 de 678 días (≈37%); el resto son vacíos de recuperación.
+data_gap,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,La biomasa de la cobertura y la fijación de nitrógeno no son observables con estos datos; requieren muestreo en campo.
+risk,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Las coberturas consumen agua al establecerse; en zonas áridas pueden competir con el cultivo principal si no se ajusta el riego
+risk,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,"Semilla, inoculante de rizobio y mano de obra deben estar disponibles localmente"
+risk,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Terminar o incorporar la cobertura requiere momento y equipo adecuados
+risk,Cultivos de cobertura fijadores de nitrógeno y hábitat de control biológico,Una cobertura mal manejada puede hospedar plagas
+strategy,Rotación de cultivos tolerantes a sequía y de raíz profunda | fit_score,100
+strategy,Rotación de cultivos tolerantes a sequía y de raíz profunda | breakdown,priority 100; water 0; aridity 5
+evidence,Rotación de cultivos tolerantes a sequía y de raíz profunda,"Índice de aridez estimado 0.18 (árido): ≈199 mm de precipitación frente a ≈1134 mm de ET₀ de referencia por año, con 678 días de datos NASA POWER."
+evidence,Rotación de cultivos tolerantes a sequía y de raíz profunda,La temperatura mínima de reanálisis bajó de 0 °C en 201 días y la máxima superó 30 °C en 0 días (valores de la celda).
+evidence,Rotación de cultivos tolerantes a sequía y de raíz profunda,Humedad superficial SMAP (9 km): media 0.083 m³/m³ en 253 recuperaciones válidas; 86% por debajo de 0.10 m³/m³.
+benefit,Rotación de cultivos tolerantes a sequía y de raíz profunda,Menor requerimiento de agua por ciclo
+benefit,Rotación de cultivos tolerantes a sequía y de raíz profunda,Las raíces profundas alcanzan humedad y nutrientes bajo la superficie y pueden mejorar la estructura del suelo
+benefit,Rotación de cultivos tolerantes a sequía y de raíz profunda,Varias especies reparten el riesgo de ingresos y clima
+benefit,Rotación de cultivos tolerantes a sequía y de raíz profunda,Rompe ciclos de plagas y enfermedades del cultivo anterior
+data_gap,Rotación de cultivos tolerantes a sequía y de raíz profunda,"Diferencia de resolución: grilla climática ≈ 0.5° × 0.625° (~50 km), SMAP ≈ 9 km, NDVI MODIS ≈ 250 m, SoilGrids ≈ 250 m. Una parcela (a menudo < 5 ha) es mucho menor que un píxel, así que son promedios de área, no mediciones en parcela."
+data_gap,Rotación de cultivos tolerantes a sequía y de raíz profunda,"La celda climática se caracteriza por una elevación de unos 3851 m (MERRA-2 grid-cell average elevation (0.5 x 0.625 deg), not plot elevation). Si tu parcela está mucho más alta o baja, las temperaturas reales pueden diferir varios °C (≈6.5 °C por km)."
+data_gap,Rotación de cultivos tolerantes a sequía y de raíz profunda,SMAP devolvió un valor válido en solo 253 de 678 días (≈37%); el resto son vacíos de recuperación.
+data_gap,Rotación de cultivos tolerantes a sequía y de raíz profunda,"SMAP solo ve unos centímetros superficiales; los beneficios de raíces profundas dependen del perfil de suelo local, que estos datos no muestran."
+data_gap,Rotación de cultivos tolerantes a sequía y de raíz profunda,"El archivo NASA POWER incluido contiene irradiancia directa normal (ALLSKY_SFC_SW_DNI) con días faltantes, no radiación global; la radiación no se usa en ningún cálculo aquí."
+risk,Rotación de cultivos tolerantes a sequía y de raíz profunda,El acceso a mercado y los precios de cultivos alternativos deben verificarse localmente
+risk,Rotación de cultivos tolerantes a sequía y de raíz profunda,"Esta herramienta no prueba rendimiento ni calidad bajo heladas, calor y salinidad locales"
+risk,Rotación de cultivos tolerantes a sequía y de raíz profunda,"Los perennes (olivo, orégano) necesitan años de establecimiento antes de generar ingreso"
+risk,Rotación de cultivos tolerantes a sequía y de raíz profunda,"El ahorro de agua depende del sistema de riego, no solo del cultivo"
+farmer,field_observations,
+meta,generated,2026-11-15T17:53:21.107Z
+meta,disclaimer,Solo apoyo a la decisión. No reemplaza el criterio del agricultor ni la asesoría de un agrónomo local. La NASA no respalda este proyecto.

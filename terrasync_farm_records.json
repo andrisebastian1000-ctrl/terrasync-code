@@ -1,0 +1,21 @@
+[
+  {
+    "id": "0319bb07-f2d5-471d-8307-659366d75ab7",
+    "name": "Export check",
+    "area": 2,
+    "previousCrop": "",
+    "sowingDate": "",
+    "notes": "",
+    "savedAt": "2026-11-15T17:52:45.427Z",
+    "snapshot": {
+      "lat": -17.193,
+      "lon": -70.935,
+      "aridity": 0.1750249630558808,
+      "ph": 8.2,
+      "strategy": "Drought-Tolerant & Deep-Rooted Crop Rotation",
+      "strategyCode": "S3",
+      "elevation": 1404,
+      "source": "NASA POWER (MERRA-2 / CERES) - local CSV"
+    }
+  }
+]

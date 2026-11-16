@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TerraSync Code - Crop Rotation & Soil Resilience Decision System</title>
+<meta name="description" content="Satellite-driven crop rotation and soil resilience decision support built with NASA open data (NASA Space Apps Challenge 2026).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#1f4d36"/><path d="M5 20c5-1 8-5 11-10 3 5 6 9 11 10" fill="none" stroke="#f4efe6" stroke-width="2"/><circle cx="16" cy="9" r="2.5" fill="#6fb1e6"/></svg>
+    <div><strong>TerraSync Code</strong><span data-i18n="tagline"></span></div>
+  </div>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button>
+  </div>
+  <button id="dashboardToggle" class="dashboard-toggle" type="button" data-i18n="view_dashboard" aria-pressed="false"></button>
+</header>
+
+<nav id="stepper" class="stepper" aria-label="Analysis progress" hidden>
+  <ol>
+    <li data-step-indicator="1"><span>1</span><b data-i18n="step_location"></b></li>
+    <li data-step-indicator="2"><span>2</span><b data-i18n="step_climate"></b></li>
+    <li data-step-indicator="3"><span>3</span><b data-i18n="step_crops"></b></li>
+    <li data-step-indicator="4"><span>4</span><b data-i18n="step_rotation"></b></li>
+  </ol>
+</nav>
+
+<main>
+  <section id="welcomeView" class="welcome">
+    <div class="welcome-copy">
+      <p class="welcome-kicker" data-i18n="welcome_kicker"></p>
+      <h1 data-i18n="welcome_title"></h1>
+      <p class="welcome-lead" data-i18n="welcome_subtitle"></p>
+      <div class="value-badges" aria-label="Platform highlights">
+        <span data-i18n="badge_nasa"></span><span data-i18n="badge_crops"></span><span data-i18n="badge_languages"></span>
+      </div>
+      <button id="startAnalysis" class="btn primary welcome-start" type="button" data-i18n="start_analysis"></button>
+    </div>
+    <div class="welcome-pilots">
+      <h2 data-i18n="pilot_shortcuts"></h2>
+      <div class="pilot-shortcut-grid">
+        <button type="button" class="pilot-shortcut" data-pilot="valle-moquegua" data-i18n="pilot_moquegua"></button>
+        <button type="button" class="pilot-shortcut" data-pilot="samegua" data-i18n="pilot_samegua"></button>
+        <button type="button" class="pilot-shortcut" data-pilot="torata" data-i18n="pilot_torata"></button>
+        <button type="button" class="pilot-shortcut" data-pilot="omate" data-i18n="pilot_omate"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="step1" class="guided-step" hidden>
+  <section class="intro">
+    <h1 data-i18n="h1"></h1>
+    <p data-i18n="lead"></p>
+  </section>
+
+  <section class="workspace">
+    <aside class="panel" id="controls">
+      <div class="block">
+        <h2 data-i18n="pilot_title"></h2>
+        <p class="hint" data-i18n="pilot_hint"></p>
+        <div id="presets" class="presets"></div>
+      </div>
+      <div class="block">
+        <h2 data-i18n="coords_title"></h2>
+        <div class="coords">
+          <label><span data-i18n="lat"></span><input id="lat" type="number" step="0.001" min="-90" max="90" value="-17.193"></label>
+          <label><span data-i18n="lon"></span><input id="lon" type="number" step="0.001" min="-180" max="180" value="-70.935"></label>
+        </div>
+        <button id="goBtn" class="btn primary" type="button" data-i18n="analyze"></button>
+        <p class="hint" data-i18n="map_hint"></p>
+      </div>
+      <div class="block">
+        <h2 data-i18n="prio_title"></h2>
+        <label class="check"><input type="checkbox" name="prio" value="water" checked> <span data-i18n="p_water"></span></label>
+        <label class="check"><input type="checkbox" name="prio" value="soil"> <span data-i18n="p_soil"></span></label>
+        <label class="check"><input type="checkbox" name="prio" value="market"> <span data-i18n="p_market"></span></label>
+        <h2 class="sub" data-i18n="avail_title"></h2>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="avail" value="1"><span data-i18n="low"></span></label>
+          <label><input type="radio" name="avail" value="2" checked><span data-i18n="medium"></span></label>
+          <label><input type="radio" name="avail" value="3"><span data-i18n="high"></span></label>
+        </div>
+      </div>
+    </aside>
+    <div class="mapwrap"><div id="map" role="application" aria-label="Map"></div><div id="status" class="status" aria-live="polite"></div></div>
+  </section>
+  </section>
+
+  <section id="results" hidden>
+    <section id="printReportCover" class="print-only">
+      <h1 data-i18n="print_report_title"></h1>
+      <div id="printContextFacts" class="print-context-facts"></div>
+    </section>
+    <section class="step-panel" data-step-content="1">
+    <div class="siteline"><h2 id="siteName"></h2><p id="siteMeta" class="hint"></p></div>
+    <div id="alerts"></div>
+    <div id="elevationComparison" class="elevation-comparison" aria-live="polite"></div>
+    <section id="executiveSummary" class="executive" aria-live="polite"></section>
+    <h2 class="section" data-i18n="ind_title"></h2>
+    <div id="indicators" class="cards"></div>
+    </section>
+
+    <section class="step-panel" data-step-content="2">
+    <h2 class="section" data-i18n="charts_title"></h2>
+    <div class="charts">
+      <figure><figcaption data-i18n="c_temp"></figcaption><div class="cv"><canvas id="chTemp"></canvas></div></figure>
+      <figure><figcaption data-i18n="c_sm"></figcaption><div class="cv"><canvas id="chSM"></canvas></div><p class="note" id="smNote"></p></figure>
+      <figure><figcaption data-i18n="c_wb"></figcaption><div class="cv"><canvas id="chWB"></canvas></div><p class="note" data-i18n="wb_note"></p></figure>
+      <figure><figcaption data-i18n="c_ndvi"></figcaption><div class="cv"><canvas id="chNDVI"></canvas></div><p class="note" id="ndviNote"></p></figure>
+    </div>
+    <div id="printClimateCharts" class="print-only print-chart-grid" aria-hidden="true"></div>
+    </section>
+
+    <section class="step-panel" data-step-content="3">
+    <section id="printSelectedCrop" class="print-only"></section>
+    <h2 id="cropBoardTitle" class="section" data-i18n="crop_board_title"></h2>
+    <p class="hint wide" data-i18n="crop_board_note"></p>
+    <h3 class="subsection" data-i18n="crop_library_title"></h3>
+    <p class="hint wide" data-i18n="crop_reference_note"></p>
+    <section class="crop-library-tools" aria-labelledby="cropControlsTitle">
+      <p id="cropControlsTitle" class="visually-hidden" data-i18n="crop_library_controls"></p>
+      <label class="crop-search"><span class="visually-hidden" data-i18n="crop_search_label"></span><input id="cropSearch" type="search" data-i18n-ph="crop_search" autocomplete="off"></label>
+      <div id="cropFilters" class="crop-filters" role="group" aria-labelledby="cropFilterLabel">
+        <span id="cropFilterLabel" class="visually-hidden" data-i18n="category_filter_label"></span>
+        <button type="button" class="filter-btn active" data-filter="all" data-i18n="category_all" aria-pressed="true"></button>
+        <button type="button" class="filter-btn" data-filter="green" data-i18n="category_green" aria-pressed="false"></button>
+        <button type="button" class="filter-btn" data-filter="cereals" data-i18n="category_cereals" aria-pressed="false"></button>
+        <button type="button" class="filter-btn" data-filter="legumes" data-i18n="category_legumes" aria-pressed="false"></button>
+        <button type="button" class="filter-btn" data-filter="roots" data-i18n="category_roots" aria-pressed="false"></button>
+        <button type="button" class="filter-btn" data-filter="perennials" data-i18n="category_perennials" aria-pressed="false"></button>
+        <button type="button" class="filter-btn" data-filter="vegetables" data-i18n="category_vegetables" aria-pressed="false"></button>
+      </div>
+      <details class="custom-crop">
+        <summary data-i18n="custom_add_title"></summary>
+        <form id="customCropForm" class="custom-crop-form">
+          <label><span data-i18n="custom_name"></span><input id="customName" type="text" maxlength="60" required></label>
+          <label><span data-i18n="custom_name_es"></span><input id="customNameEs" type="text" maxlength="60"></label>
+          <label><span data-i18n="custom_category"></span><select id="customCategory" required>
+            <option value="cereals" data-i18n="category_cereals"></option><option value="legumes" data-i18n="category_legumes"></option><option value="roots" data-i18n="category_roots"></option><option value="perennials" data-i18n="category_perennials"></option><option value="vegetables" data-i18n="category_vegetables"></option>
+          </select></label>
+          <label><span data-i18n="custom_ph_min"></span><input id="customPhMin" type="number" min="3" max="10" step="0.1" value="5.5" required></label>
+          <label><span data-i18n="custom_ph_max"></span><input id="customPhMax" type="number" min="3" max="10" step="0.1" value="7.5" required></label>
+          <label><span data-i18n="custom_water"></span><select id="customWater" required><option value="low" data-i18n="low"></option><option value="medium" data-i18n="medium" selected></option><option value="high" data-i18n="high"></option></select></label>
+          <label><span data-i18n="custom_frost"></span><select id="customFrost" required><option value="sensitive" data-i18n="frost_sensitive"></option><option value="moderate" data-i18n="frost_moderate" selected></option><option value="tolerant" data-i18n="frost_tolerant"></option></select></label>
+          <label><span data-i18n="custom_cycle"></span><input id="customCycle" type="number" min="3" max="36" step="1" value="5" required></label>
+          <button type="submit" class="btn primary" data-i18n="custom_add"></button>
+        </form>
+      </details>
+    </section>
+    <div id="cropBoard" class="crop-board"></div>
+
+    <h2 class="section" data-i18n="calendar_title"></h2>
+    <p class="hint wide" data-i18n="calendar_note"></p>
+    <div class="calendar-tools"><label class="active-crop-control"><span data-i18n="active_crop"></span><select id="activeCropSelect"></select></label><span id="calendarCropCycle" class="cycle-badge"></span></div>
+    <div id="plantingCalendar" class="planting-calendar"></div>
+    <h3 class="subsection" data-i18n="sequence_title"></h3>
+    <div id="rotationSequence"></div>
+    </section>
+
+    <section class="step-panel" data-step-content="4">
+    <h2 class="section" data-i18n="strat_title"></h2>
+    <p class="hint wide" data-i18n="strat_note"></p>
+    <section id="printSelectedStrategy" class="print-only"></section>
+    <div id="strategies" class="strategies"></div>
+
+    <h2 id="forecastTitle" class="section" data-i18n="forecast_title"></h2>
+    <p class="forecast-disclaimer" data-i18n="forecast_disclaimer"></p>
+    <p class="hint wide" data-i18n="forecast_note"></p>
+    <section class="simulator" aria-labelledby="forecastTitle">
+      <div class="sim-controls">
+        <label class="range-control"><span data-i18n="precip_scenario"></span><output id="precipValue" for="precipScenario"></output><input id="precipScenario" type="range" min="-30" max="20" step="10" value="0"></label>
+        <label class="range-control"><span data-i18n="temp_shift"></span><output id="tempValue" for="tempScenario"></output><input id="tempScenario" type="range" min="0" max="3" step="0.5" value="0"></label>
+        <fieldset class="efficiency-control"><legend data-i18n="irrigation_efficiency"></legend>
+          <label><input type="radio" name="efficiency" value="50" checked><span data-i18n="surface_flood"></span></label>
+          <label><input type="radio" name="efficiency" value="85"><span data-i18n="drip_tech"></span></label>
+        </fieldset>
+      </div>
+      <p id="scenarioReadout" class="sim-readout" aria-live="polite"></p>
+      <div class="forecast-charts">
+        <figure><div class="cv"><canvas id="chForecastSoil"></canvas></div></figure>
+        <figure><div class="cv"><canvas id="chForecastWater"></canvas></div></figure>
+        <figure><div class="cv"><canvas id="chForecastYield"></canvas></div></figure>
+      </div>
+      <div id="printForecastCharts" class="print-only print-chart-grid" aria-hidden="true"></div>
+    </section>
+
+    <h2 class="section" data-i18n="farm_title"></h2>
+    <section class="farm-logbook">
+      <div class="farm-form">
+        <label><span data-i18n="farm_name"></span><input id="recordName" type="text" maxlength="100" required></label>
+        <label><span data-i18n="farm_area"></span><input id="recordArea" type="number" min="0.01" step="0.01" required></label>
+        <label><span data-i18n="previous_crop"></span><select id="recordCrop"></select></label>
+        <label><span data-i18n="sowing_date"></span><input id="recordSowingDate" type="date"></label>
+        <label class="notes-field"><span data-i18n="field_notes"></span><textarea id="recordNotes" rows="4" data-i18n-ph="notes_ph"></textarea></label>
+      </div>
+      <div class="actions">
+        <button id="csvBtn" class="btn primary" type="button" data-i18n="export_csv"></button>
+        <button id="printBtn" class="btn" type="button" data-i18n="print"></button>
+        <button id="saveRecord" class="btn primary" type="button" data-i18n="save_record"></button>
+        <button id="recordsCsv" class="btn" type="button" data-i18n="export_records_csv"></button>
+        <button id="recordsJson" class="btn" type="button" data-i18n="export_records_json"></button>
+      </div>
+      <div class="records-heading"><h3 data-i18n="records_title"></h3></div>
+      <div id="savedRecords" class="saved-records" aria-live="polite"></div>
+      <div id="recordInspection" class="record-inspection" aria-live="polite"></div>
+    </section>
+    </section>
+    <section id="printSavedRecords" class="print-only"></section>
+  </section>
+  <div id="stepNavigation" class="step-navigation" hidden>
+    <button id="previousStep" class="btn" type="button" data-i18n="previous_step"></button>
+    <button id="nextStep" class="btn primary" type="button" data-i18n="next_step"></button>
+  </div>
+</main>
+
+<footer>
+  <section class="coverage">
+    <h3 data-i18n="coverage_title"></h3>
+    <h4 data-i18n="coverage_active"></h4>
+    <div id="coverageActive" class="coverage-grid"></div>
+    <h4 data-i18n="coverage_next"></h4>
+    <div id="coverageNext" class="coverage-grid"></div>
+  </section>
+  <h3 data-i18n="f_sources"></h3>
+  <ul id="srcUsed"></ul>
+  <h3 data-i18n="f_ext"></h3>
+  <p id="srcExt"></p>
+  <h3 data-i18n="f_ai_t"></h3>
+  <p data-i18n="f_ai"></p>
+  <p class="small" data-i18n="f_disc"></p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="data/moquegua_data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
